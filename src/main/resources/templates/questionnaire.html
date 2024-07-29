@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionnaire</title>
+  <link rel="stylesheet" href="../static/css/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .category {
+      margin-bottom: 20px;
+    }
+    .question {
+      margin-bottom: 10px;
+    }
+    .options {
+      margin-bottom: 20px;
+    }
+    .questions {
+      display: none;
+    }
+    .question.hidden {
+      display: none;
+    }
+  </style>
+  <script>
+    function toggleQuestions() {
+      const allQuestions = document.querySelectorAll('.questions');
+      allQuestions.forEach(section => section.style.display = 'none');
+
+      const categories = document.querySelectorAll('input[name="category"]:checked');
+      categories.forEach(cat => {
+        const section = document.getElementById(cat.value);
+        if (section) {
+          section.style.display = 'block';
+          showFirstQuestion(section);
+        }
+      });
+    }
+
+    function showFirstQuestion(section) {
+      const questions = section.querySelectorAll('.question');
+      if (questions.length > 0) {
+        questions.forEach((q, index) => {
+          q.classList.add('hidden');
+          q.querySelector('input, select').addEventListener('change', function() {
+            if (index + 1 < questions.length) {
+              questions[index + 1].classList.remove('hidden');
+            }
+          });
+        });
+        questions[0].classList.remove('hidden');
+      }
+    }
+
+    function handleCareerGoalsChange() {
+      const careerGoalsSelect = document.getElementById('careerGoals');
+      const otherCareerGoalsInput = document.getElementById('otherCareerGoals');
+      if (careerGoalsSelect.value === 'Other') {
+        otherCareerGoalsInput.style.display = 'block';
+      } else {
+        otherCareerGoalsInput.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+      const careerGoalsSelect = document.getElementById('careerGoals');
+      careerGoalsSelect.addEventListener('change', handleCareerGoalsChange);
+    });
+  </script>
+</head>
+<body>
+<h1>Questionnaire</h1>
+<form action="#" th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+<form th:action="@{/submitQuestionnaire}" method="post">
+  <div class="category">
+    <h2>Categories</h2>
+    <label><input type="checkbox" name="category" value="category1" onclick="toggleQuestions()"> Academic Profile</label><br>
+    <label><input type="checkbox" name="category" value="category2" onclick="toggleQuestions()"> Personal Preferences</label><br>
+    <label><input type="checkbox" name="category" value="category3" onclick="toggleQuestions()"> Financial Constraints</label><br>
+    <label><input type="checkbox" name="category" value="category4" onclick="toggleQuestions()"> Career Prospects</label><br>
+  </div>
+
+  <div id="category1" class="questions">
+    <h2>Academic Profile</h2>
+    <div class="question">
+      <label for="highestEducationLevel">What is your highest level of education completed?</label>
+      <select id="highestEducationLevel" name="highestEducationLevel">
+        <option value="High School Diploma">High School Diploma</option>
+        <option value="Associate Degree">Associate Degree</option>
+        <option value="Bachelor's Degree">Bachelor's Degree</option>
+        <option value="Master's Degree">Master's Degree</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="intendedFieldOfStudy">What is your intended field of study?</label>
+      <select id="intendedFieldOfStudy" name="intendedFieldOfStudy">
+        <option value="Engineering">Engineering</option>
+        <option value="Business">Business</option>
+        <option value="Arts and Humanities">Arts and Humanities</option>
+        <option value="Science and Technology">Science and Technology</option>
+        <option value="Health Sciences">Health Sciences</option>
+        <option value="Social Sciences">Social Sciences</option>
+        <option value="Law">Law</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="gpa">What is your GPA or equivalent academic performance?</label>
+      <input type="text" id="gpa" name="gpa">
+    </div>
+
+    <div class="question hidden">
+      <label for="testTaken">Have you taken any standardized tests? If yes, please specify your scores.</label>
+      <select id="testTaken" name="testTaken">
+        <option value="Duolingo">Duolingo</option>
+        <option value="GRE">GRE</option>
+        <option value="GMAT">GMAT</option>
+        <option value="IELTS">IELTS</option>
+        <option value="TOEFL">TOEFL</option>
+        <option value="Not Applicable">Not Applicable</option>
+      </select>
+      <div>
+        <label for="testScore">What is your standardized test score?</label>
+        <input type="text" id="testScore" name="testScore">
+      </div>
+    </div>
+
+    <div class="question hidden">
+      <label for="yearsOfExperience">How many years of relevant work experience do you have in your field of study?</label>
+      <input type="text" id="yearsOfExperience" name="yearsOfExperience">
+    </div>
+  </div>
+
+  <div id="category2" class="questions">
+    <h2>Personal Preferences</h2>
+    <div class="question">
+      <label for="campusEnvironmentType">What type of campus environment do you prefer?</label>
+      <select id="campusEnvironmentType" name="campusEnvironmentType">
+        <option value="Urban">Urban</option>
+        <option value="Suburban">Suburban</option>
+        <option value="Rural">Rural</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="classSize">What is your preferred class size?</label>
+      <input type="text" id="classSize" name="classSize">
+    </div>
+
+    <div class="question hidden">
+      <label for="onCampusHousing">What type of housing are you interested in?</label>
+      <select id="onCampusHousing" name="onCampusHousing">
+        <option value="On-campus housing">On-campus housing</option>
+        <option value="Off-campus housing">Off-campus housing</option>
+        <option value="Commuting from home">Commuting from home</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="clubsAndSocieties">How important are extracurricular activities (sports, clubs, etc.) to you?</label>
+      <select id="clubsAndSocieties" name="clubsAndSocieties">
+        <option value="Very important">Very important</option>
+        <option value="Somewhat important">Somewhat important</option>
+        <option value="Not important">Not important</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="modeOfStudy">What is your preferred mode of study?</label>
+      <select id="modeOfStudy" name="modeOfStudy">
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+        <option value="Online">Online</option>
+        <option value="Hybrid">Hybrid</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="category3" class="questions">
+    <h2>Financial Constraints</h2>
+    <div class="question">
+      <label for="tuitionFeesInEuro">What is your budget for tuition fees per year?</label>
+      <select id="tuitionFeesInEuro" name="tuitionFeesInEuro">
+        <option value="Less than €5,000">Less than €5,000</option>
+        <option value="€5,000 - €10,000">€5,000 - €10,000</option>
+        <option value="€10,000 - €20,000">€10,000 - €20,000</option>
+        <option value="More than €20,000">More than €20,000</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="financialAid">Are you seeking financial aid or scholarships?</label>
+      <select id="financialAid" name="financialAid">
+        <option value="Yes, fully dependent">Yes, fully dependent</option>
+        <option value="Yes, partially dependent">Yes, partially dependent</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="livingExpenseBudgetPerYearInEuro">What is your budget for living expenses per year?</label>
+      <select id="livingExpenseBudgetPerYearInEuro" name="livingExpenseBudgetPerYearInEuro">
+        <option value="Less than €5,000">Less than €5,000</option>
+        <option value="€5,000 - €10,000">€5,000 - €10,000</option>
+        <option value="€10,000 - €15,000">€10,000 - €15,000</option>
+        <option value="More than €15,000">More than €15,000</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="partTime">Do you plan to work part-time while studying?</label>
+      <select id="partTime" name="partTime">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+        <option value="Not sure">Not sure</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="category4" class="questions">
+    <h2>Career Prospects</h2>
+    <div class="question">
+      <label for="careerGoals">What are your career goals post-graduation?</label>
+      <select id="careerGoals" name="careerGoals">
+        <option value="Employment in Ireland">Employment in Ireland</option>
+        <option value="Further studies">Further studies</option>
+        <option value="Employment abroad">Employment abroad</option>
+        <option value="Starting a business">Starting a business</option>
+        <!--<option value="Other">Other</option>-->
+      </select>
+      <!--<div class="additional-info hidden" id="otherCareerGoals">
+        <label for="otherCareerGoalsText">Please specify:</label>
+        <input type="text" id="otherCareerGoalsText" name="otherCareerGoals">
+      </div>-->
+    </div>
+
+    <div class="question hidden">
+      <label for="employmentRate">How important are employment rates of graduates to you?</label>
+      <select id="employmentRate" name="employmentRate">
+        <option value="Very important">Very important</option>
+        <option value="Somewhat important">Somewhat important</option>
+        <option value="Not important">Not important</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="careerServices">How important are career services (counseling, job fairs, etc.) to you?</label>
+      <select id="careerServices" name="careerServices">
+        <option value="Very important">Very important</option>
+        <option value="Somewhat important">Somewhat important</option>
+        <option value="Not important">Not important</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="alumniNetwork">How important is the university’s alumni network for your career?</label>
+      <select id="alumniNetwork" name="alumniNetwork">
+        <option value="Very important">Very important</option>
+        <option value="Somewhat important">Somewhat important</option>
+        <option value="Not important">Not important</option>
+      </select>
+    </div>
+
+    <div class="question hidden">
+      <label for="factorsOfSelection">What are the most important factors for you when choosing a university?</label>
+      <select id="factorsOfSelection" name="factorsOfSelection">
+        <option value="Academic reputation">Academic reputation</option>
+        <option value="Program availability">Program availability</option>
+        <option value="Campus facilities">Campus facilities</option>
+        <option value="Location">Location</option>
+        <option value="Cost">Cost</option>
+        <option value="Student support services">Student support services</option>
+        <option value="Career services">Career services</option>
+      </select>
+    </div>
+  </div>
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

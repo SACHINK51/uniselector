@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University List</title>
+	<link th:href="@{/css/styles.css}" rel="stylesheet">
+	<style>
+	        ul {
+	            list-style-type: none; /* Removes default list bullet points */
+	            padding: 0;
+	        }
+	        li {
+	            margin-bottom: 10px; /* Adds space between items */
+	        }
+	    </style>
+</head>
+<body>
+    <h1>Recommended Universities</h1>
+	<form action="#" th:action="@{/logout}" method="post">
+	    <button type="submit">Logout</button>
+	</form>
+	<ul>
+	    <!--<li th:each="university : ${universities}" th:text="${university}"></li>-->
+		<li th:each="university : ${universities}">
+			<a th:href="@{${university.url}}" 
+			th:text="${university.name}" 
+			target="_blank"></a>
+		</li>
+	</ul>
+</body>
+</html>
