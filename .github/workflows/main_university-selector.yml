@@ -19,11 +19,8 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
-          java-version: '21.0.2'
-          distribution: 'temurin'
-          
-      - name: Check Java version
-        run: java -version
+          java-version: '8.0.0_392'
+          distribution: 'microsoft'
 
       - name: Build with Maven
         run: mvn clean install
@@ -38,29 +35,20 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'production'
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.__clientidsecretname__ }}
-          tenant-id: ${{ secrets.__tenantidsecretname__ }}
-          subscription-id: ${{ secrets.__subscriptionidsecretname__ }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'university-selector'
-          slot-name: 'production'
+          slot-name: 'Production'
           package: '*.jar'
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF0585089B7F4BED85E5F10A9713ED57 }}
